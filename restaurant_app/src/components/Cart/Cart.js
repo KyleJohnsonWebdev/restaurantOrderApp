@@ -25,6 +25,19 @@ const Cart = (props) => {
     setIsCheckOut(true);
   };
 
+  const submitOrderHandler = (userData) => {
+    fetch(
+      "https://console.firebase.google.com/project/restaurant-app-kj/database/restaurant-app-kj-default-rtdb/data/~2F/orders.json",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          user: userData,
+          orderedItems: cartCtx.items,
+        }),
+      }
+    );
+  };
+
   const cartItems = (
     <ul className={classes["cart-items"]}>
       {/* bind pre-configure as a function for future execution and basically allows you to pre-configure 
@@ -62,7 +75,9 @@ const Cart = (props) => {
         <span>Total Amount</span>
         <span>{totalAmount}</span>
       </div>
-      {isCheckOut && <Checkout onCancel={props.onClose} />}
+      {isCheckOut && (
+        <Checkout onConfirm={submitOrderHandler} onCancel={props.onClose} />
+      )}
       {!isCheckOut && modalAction}
     </Modal>
   );
